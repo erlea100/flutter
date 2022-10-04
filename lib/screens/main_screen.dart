@@ -19,11 +19,13 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
   String userEmail = '';
   String userPassword = '';
 
-  void _tryValidation() {
+  bool _tryValidation() {
     final isValid = _formKey.currentState!.validate();
     if (isValid) {
       _formKey.currentState!.save();
+      return true;
     }
+    return false;
   }
 
   @override
@@ -455,30 +457,35 @@ class _LoginSignupScreenState extends State<LoginSignupScreen> {
                   child: GestureDetector(
                     onTap: () async {
                       if (isSignupScreen) {
-                        _tryValidation();
-                        try {
-                          final newUser = await _authenticatioin
-                              .createUserWithEmailAndPassword(
-                            email: userEmail,
-                            password: userPassword,
-                          );
-                          if (newUser.user != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) {
-                                return ChatScreen();
-                              }),
+                        // _tryValidation();
+                        if (_tryValidation()) {
+                          try {
+                            final newUser = await _authenticatioin
+                                .createUserWithEmailAndPassword(
+                              email: userEmail,
+                              password: userPassword,
+                            );
+                            if (newUser.user != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) {
+                                  return ChatScreen();
+                                }),
+                              );
+                            }
+                          } catch (e) {
+                            print(e);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    'Please check your email and password'),
+                                backgroundColor: Colors.blue,
+                              ),
                             );
                           }
-                        } catch (e) {
-                          print(e);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content:
-                                  Text('Please check your email and password'),
-                              backgroundColor: Colors.blue,
-                            ),
-                          );
+                        }
+                        if(!_tryValidation()){
+                          return null;
                         }
                       }
                       if (!isSignupScreen) {
