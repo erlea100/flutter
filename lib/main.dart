@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:chat_app/screens/main_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+        apiKey: 'AIzaSyA5D4Ts0jiX5kjjv7LAioBHqpnZoA3MZxA',
+        appId: '1:958620448833:android:cf18f11f902a29c3f0aec0',
+        messagingSenderId: '958620448833',
+        projectId: 'chat-app-893da'),
+  );
   runApp(MyApp());
 }
 
